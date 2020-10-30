@@ -1,4 +1,4 @@
-class Target {
+class Obstacle {
 
     constructor(x, y) {
         this.x = x;
@@ -7,7 +7,7 @@ class Target {
 
     show() {
 
-        fill(10, 255, 30);
+        fill(255, 10, 30);
         ellipse(this.x, this.y, target_radius * 2, target_radius * 2);
     }
 

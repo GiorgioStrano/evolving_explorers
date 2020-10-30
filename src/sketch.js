@@ -3,9 +3,10 @@ let pointer;
 let speed = 3;
 let counter;
 let n = 400;
-let lifespan = 20;
+let lifespan = 50;
 let mutationRate = 0.08;
 const target_radius = 25;
+let obstacles = [];
 
 function setup() {
     frameRate(60);
@@ -14,7 +15,7 @@ function setup() {
     // pointer = new Pointer(random(10 , width-10) , random(height-40 , height-3));
 
     //generate new Population
-    population = new Population(n, target);
+    population = new Population(n, target, people = [], obstacles);
 
 }
 
@@ -30,8 +31,6 @@ function draw() {
     noStroke();
     target.show();
 
-
-
     if (population.alive)
         population.move();
 
@@ -43,7 +42,18 @@ function draw() {
 
 }
 
-function mouseClicked() {
-    target.x = mouseX;
-    target.y = mouseY;
+function addObstacle(x, y) {
+    obstacles.push(new Obstacle(x, y));
 }
+
+function mouseClicked(evt) {
+
+    if (evt.shiftKey == true) {
+        addObstacle(mouseX, mouseY);
+    }
+    else {
+        target.x = mouseX;
+        target.y = mouseY;
+    }
+}
+

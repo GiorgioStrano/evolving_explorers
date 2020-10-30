@@ -1,5 +1,5 @@
 class Population {
-    constructor(size, target, people = []) {
+    constructor(size, target, people = [], obstacles = []) {
         this.people = people;
         this.size = size;
         this.alive = true;
@@ -7,6 +7,7 @@ class Population {
         this.currentMove = 0;
         this.target = target;
         this.bestFitPointer;
+        this.obstacles = obstacles;
 
 
         if (this.people.length == 0) {
@@ -18,7 +19,7 @@ class Population {
     fillRandom() {
         for (let i = 0; i < this.size; i++) {
 
-            let player = new Pointer(width / 2, height / 2);
+            let player = new Pointer(width / 2, height - 20);
             this.people.push(player);
         }
 
@@ -47,29 +48,29 @@ class Population {
             this.totalFit += this.people[i].fit;
 
         }
-
-        console.log(this.bestFitPointer.dna.genesList);
     }
 
 
     move() {
+        for (let obstacle of obstacles) {
+            obstacle.show();
+        }
         if ((this.timer % 10 == 0) && (this.timer)) {
             this.currentMove++;
         }
 
-        // const v1 = createVector(mouseX - this.target.x, mouseY - this.target.y);
-        // const v2 = createVector(1, 0);
-
-        // const base_angle = v1.angleBetween(v2) * Math.sign(v1.cross(v2).z || 1) + Math.PI;
-
-        // console.log(base_angle);
-
-        // moves every element of people
         for (let i = 0; i < this.size; i++) {
 
             if (!this.people[i].move(this.currentMove, this.target.x, this.target.y)) {
                 this.killEmAll();
                 break;
+            }
+
+            for (let j = 0; j < this.obstacles.length; j++) {
+
+                if (dist(this.obstacles[j].x, this.obstacles[j].y, this.people[i].x, this.people[i].y) <= target_radius) {
+                    this.people[i].bonk();
+                }
             }
 
             if (dist(this.target.x, this.target.y, this.people[i].x, this.people[i].y) < target_radius)
@@ -80,7 +81,6 @@ class Population {
 
     killEmAll() {
         this.alive = false;
-        console.log("ded");
         // this.calculateFit();
     }
 
@@ -92,14 +92,14 @@ class Population {
         let newPop = [];
 
         for (let i = 0; i < int(n / 2); i++) {
-            newPop.push(new Pointer(width / 2, height / 2, this.people[i].dna));
+            newPop.push(new Pointer(width / 2, height - 20, this.people[i].dna));
         }
 
         for (let i = 0; i < int(n / 2); i++) {
             let other = this.people[int(random() * int(n / 2))];
             newPop.push(this.people[i].combine(other));
         }
-        return new Population(n, target, newPop);
+        return new Population(n, target, newPop, obstacles);
     }
 
 

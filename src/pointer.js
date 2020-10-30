@@ -12,6 +12,7 @@ class Pointer {
         this.normFit = 0;
 
         this.hasReachedGoal = false;
+        this.bonked = false;
 
         if (dna == 0) {
             this.dna = new Dna(lifespan);
@@ -24,6 +25,9 @@ class Pointer {
 
     stop() {
         this.hasReachedGoal = true;
+    }
+    bonk() {
+        this.bonked = true;
     }
 
     show() {
@@ -40,7 +44,7 @@ class Pointer {
     }
 
     move(moveIndex, targetx, targety) {
-        if (this.hasReachedGoal) {
+        if (this.hasReachedGoal || this.bonked) {
             this.show();
             return true;
         }
@@ -84,7 +88,7 @@ class Pointer {
         }
 
         let babyDna = new Dna(n, babyGenes);
-        return new Pointer(width / 2, height / 2, babyDna);
+        return new Pointer(width / 2, height - 20, babyDna);
     }
 
 }
